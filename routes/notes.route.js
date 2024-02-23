@@ -52,17 +52,25 @@ r.put("/", async (req, res) => {
   }
 });
 
-//TODO
 r.delete("/", async (req, res) => {
-  /* Hints:
-   * - you need both params that are passed down via req.params
-   * - you will need to figure out the id of the user
-   * - then you will be able to query the db with a DELETE statement
-   * - return a JSON like { error: "note not found" } when the db didn't delete anything
-   * - if deletion was successful then return a text with a success message
-   */
+  await createTables();
+  const user = req.params.user;
+  const notesId = req.params.id;
 
-  return res.json("route not yet implemented.");
+  /* first check to see if we can find the user */
+  const {
+    rows: [{ id }],
+  } = await postgres.sql`SELECT id FROM users WHERE users.name=${user}`;
+
+  /* then use that user's id to delete the requested note */
+  const { rowCount } =
+    await postgres.sql`DELETE FROM notes WHERE notes."userId"=${id} AND notes.id=${notesId}`;
+
+  if (!rowCount) {
+    return res.json({ error: "note not found" });
+  }
+
+  return res.json("Successfully deleted note");
 });
 
 module.exports = r;
