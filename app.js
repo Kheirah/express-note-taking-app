@@ -13,7 +13,7 @@ app.use("/", routes);
 
 // default catch-all handler
 app.get("*", (request, response) => {
-  response.status(404).json({ error: "route not defined" });
+  response.status(404).json({ message: "route not defined" });
 });
 
 const server = app.listen(port, () =>

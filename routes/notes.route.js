@@ -43,12 +43,12 @@ r.put("/", async (req, res) => {
       await postgres.sql`UPDATE notes SET content = ${content} WHERE notes."userId" = ${id} AND notes.id = ${notesId}`;
 
     if (!rowCount) {
-      return res.json({ error: "note not found" });
+      return res.json({ message: "note not found" });
     }
 
-    return res.json("Successfully edited note");
+    return res.json({ message: "Successfully edited note" });
   } else {
-    return res.json("Note NOT created since content is missing.");
+    return res.json({ message: "Note NOT created since content is missing." });
   }
 });
 
@@ -67,10 +67,10 @@ r.delete("/", async (req, res) => {
     await postgres.sql`DELETE FROM notes WHERE notes."userId"=${id} AND notes.id=${notesId}`;
 
   if (!rowCount) {
-    return res.json({ error: "note not found" });
+    return res.json({ message: "note not found" });
   }
 
-  return res.json("Successfully deleted note");
+  return res.json({ message: "Successfully deleted note" });
 });
 
 module.exports = r;
